@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "수업 탭 기록",
+  "version": "1.0.0",
+  "description": "수업 시간에 보고 있는 유튜브 영상 제목과 사이트 이름을 선생님의 구글 시트에 기록합니다.",
+  "minimum_chrome_version": "120",
+  "permissions": ["tabs", "alarms", "storage", "identity", "identity.email"],
+  "host_permissions": [
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "storage": { "managed_schema": "schema.json" },
+  "action": {
+    "default_title": "수업 탭 기록",
+    "default_icon": { "16": "icon16.png", "32": "icon32.png" }
+  },
+  "icons": { "16": "icon16.png", "32": "icon32.png", "48": "icon48.png", "128": "icon128.png" }
+}
