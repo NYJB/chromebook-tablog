@@ -31,7 +31,7 @@ function makeEvent() {
   return { fns, addListener: (f) => fns.push(f), fire: (...a) => fns.forEach((f) => f(...a)) };
 }
 
-const ALL_DAY = { days: [0, 1, 2, 3, 4, 5, 6], start: "00:00", end: "24:00" };
+const ALL_DAY = {};
 
 function setup({ managed = {}, tab, focused = true, email = "s1@school.kr", fetchImpl, DateImpl } = {}) {
   const env = {
@@ -128,18 +128,13 @@ test("기록 안 함: 창 포커스 없음 / chrome:// / 로딩 중 유튜브 / 
   assert.equal(buf(s.chrome).length, 0);
 });
 
-test("기록 시간 밖이면 기록 안 함, 끝 시각은 포함하지 않음", async () => {
+test("시간·요일 제한 없이 기록 (밤·주말 포함)", async () => {
   const fixed = (iso) => class extends Date { constructor(...a) { super(...(a.length ? a : [iso])); } static now() { return new Date(iso).getTime(); } };
-  // 2026-11-11은 수요일(3)
-  let s = setup({ managed: { days: [3], start: "08:30", end: "15:00" }, DateImpl: fixed("2026-11-11T15:00:00") });
-  await s.ctx.record();
-  assert.equal(buf(s.chrome).length, 0, "15:00 정각은 끝");
-  s = setup({ managed: { days: [3], start: "08:30", end: "15:00" }, DateImpl: fixed("2026-11-11T08:30:00") });
-  await s.ctx.record();
-  assert.equal(buf(s.chrome).length, 1, "08:30 정각은 시작");
-  s = setup({ managed: { days: [1, 2, 4, 5], start: "08:30", end: "15:00" }, DateImpl: fixed("2026-11-11T10:00:00") });
-  await s.ctx.record();
-  assert.equal(buf(s.chrome).length, 0, "요일 밖");
+  for (const iso of ["2026-11-11T21:30:00", "2026-11-14T10:00:00", "2026-11-11T06:00:00"]) {
+    const s = setup({ DateImpl: fixed(iso) });
+    await s.ctx.record();
+    assert.equal(buf(s.chrome).length, 1, iso);
+  }
 });
 
 test("다음 날 같은 탭이면 다시 기록된다 (lastKey에 날짜 포함)", async () => {

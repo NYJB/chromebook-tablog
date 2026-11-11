@@ -4,9 +4,6 @@
     "endpoint": { "type": "string" },
     "token": { "type": "string" },
     "titleDomains": { "type": "array", "items": { "type": "string" } },
-    "days": { "type": "array", "items": { "type": "integer" } },
-    "start": { "type": "string" },
-    "end": { "type": "string" },
     "intervalMinutes": { "type": "integer" }
   }
 }

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "탭 기록",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "minimum_chrome_version": "120",
   "permissions": ["tabs", "alarms", "storage", "identity", "identity.email"],
   "host_permissions": [

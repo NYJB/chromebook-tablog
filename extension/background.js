@@ -2,9 +2,6 @@ const DEFAULTS = {
   endpoint: "",
   token: "",
   titleDomains: ["youtube.com"],
-  days: [1, 2, 3, 4, 5],
-  start: "08:30",
-  end: "15:00",
   intervalMinutes: 10,
 };
 
@@ -27,22 +24,7 @@ async function getConfig() {
   c.titleDomains = Array.isArray(c.titleDomains)
     ? c.titleDomains.map((d) => String(d).toLowerCase().replace(/^www\./, "").trim()).filter(Boolean)
     : DEFAULTS.titleDomains;
-  c.days = Array.isArray(c.days) ? c.days.map(Number) : DEFAULTS.days;
   return c;
-}
-
-function toMinutes(hhmm) {
-  const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || ""));
-  return m ? Number(m[1]) * 60 + Number(m[2]) : null;
-}
-
-function inSchedule(c, now = new Date()) {
-  if (!c.days.includes(now.getDay())) return false;
-  const s = toMinutes(c.start);
-  const e = toMinutes(c.end);
-  if (s === null || e === null) return false;
-  const cur = now.getHours() * 60 + now.getMinutes();
-  return cur >= s && cur < e;
 }
 
 let chain = Promise.resolve();
@@ -79,7 +61,7 @@ function titleAllowed(domain, list) {
 function record() {
   return serial(async () => {
     const c = await getConfig();
-    if (!inSchedule(c) || !c.endpoint || !c.token) return;
+    if (!c.endpoint || !c.token) return;
 
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     if (!tab || !tab.url) return;
