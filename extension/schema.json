@@ -1,29 +1,12 @@
 {
   "type": "object",
   "properties": {
-    "endpoint": {
-      "title": "Apps Script 웹 앱 주소",
-      "description": "https://script.google.com/macros/s/.../exec",
-      "type": "string"
-    },
-    "token": {
-      "title": "공유 토큰",
-      "description": "구글 시트 메뉴 '탭 기록 > 토큰 보기'에 나오는 값",
-      "type": "string"
-    },
-    "titleDomains": {
-      "title": "제목까지 기록할 사이트",
-      "description": "여기 있는 사이트만 탭 제목을 기록하고, 나머지는 사이트 이름만 기록합니다.",
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    "days": {
-      "title": "기록할 요일 (1=월 ... 5=금)",
-      "type": "array",
-      "items": { "type": "integer" }
-    },
-    "start": { "title": "기록 시작 시각 (HH:MM)", "type": "string" },
-    "end": { "title": "기록 끝 시각 (HH:MM)", "type": "string" },
-    "intervalMinutes": { "title": "전송 간격(분)", "type": "integer" }
+    "endpoint": { "type": "string" },
+    "token": { "type": "string" },
+    "titleDomains": { "type": "array", "items": { "type": "string" } },
+    "days": { "type": "array", "items": { "type": "integer" } },
+    "start": { "type": "string" },
+    "end": { "type": "string" },
+    "intervalMinutes": { "type": "integer" }
   }
 }

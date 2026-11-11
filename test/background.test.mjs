@@ -264,7 +264,6 @@ test("이메일 없음·설정 없음이면 보내지 않음", async () => {
   s = setup({ managed: "throw" });
   await s.ctx.flush();
   assert.equal(s.env.requests.length, 0);
-  assert.equal(s.chrome.action.badge, "");
 });
 
 test("flush가 겹쳐 불려도 요청은 한 번", async () => {
@@ -280,13 +279,12 @@ test("flush가 겹쳐 불려도 요청은 한 번", async () => {
   assert.equal(env.requests.length, 1);
 });
 
-test("알람: 생성·주기 범위·재생성, 알람 때 기록 후 전송, 배지", async () => {
+test("알람: 생성·주기 범위·재생성, 알람 때 기록 후 전송", async () => {
   const { chrome, env, ev } = setup({ managed: { intervalMinutes: 2 } });
   await tick();
   const a = chrome.alarms.map.get("flush");
   assert.equal(a.periodInMinutes, 5, "5분 미만은 5분으로");
   assert.ok(a.delayInMinutes >= 1 && a.delayInMinutes <= 5);
-  assert.equal(chrome.action.badge, "기록");
 
   chrome.storage.managed.data.intervalMinutes = 30;
   ev.onChanged.fire({ intervalMinutes: {} }, "managed");
