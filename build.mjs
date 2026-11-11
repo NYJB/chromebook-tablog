@@ -31,17 +31,41 @@ fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
 fs.mkdirSync(docs, { recursive: true });
 
-// 1) 아이콘: 빨간 원 (녹화 중 표시처럼)
+// 1) 아이콘: 16x16 도트 몽당연필 (크기별로 정수배 확대)
+const PENCIL = [
+  "................",
+  "................",
+  "................",
+  "................",
+  "..KKKKKKKKKK....",
+  ".KPPPKSSYYYYKK..",
+  "KPPPPKSSYYYYWWK.",
+  "KPPPPKSSYEYEWWGK",
+  "KPPPPKSSRYYYRWGK",
+  "KPPPPKSSOOOOWWK.",
+  ".KPPPKSSOOOOKK..",
+  "..KKKKKKKKKK....",
+  "................",
+  "................",
+  "................",
+  "................",
+];
+const COLORS = {
+  K: [0x3b, 0x2a, 0x1f], P: [0xf4, 0x8f, 0xb1], S: [0xb0, 0xbe, 0xc5],
+  Y: [0xff, 0xd5, 0x4f], O: [0xf9, 0xa8, 0x25], W: [0xf1, 0xc2, 0x7d],
+  G: [0x42, 0x42, 0x42], E: [0x21, 0x21, 0x21], R: [0xff, 0x8a, 0x80],
+};
 function png(size) {
+  const scale = size / 16;
   const raw = Buffer.alloc((size * 4 + 1) * size);
-  const c = (size - 1) / 2, r = size * 0.42;
   for (let y = 0; y < size; y++) {
     raw[y * (size * 4 + 1)] = 0;
     for (let x = 0; x < size; x++) {
-      const dist = Math.hypot(x - c, y - c);
-      const a = Math.max(0, Math.min(1, r - dist + 0.5));
+      const ch = PENCIL[Math.floor(y / scale)][Math.floor(x / scale)];
       const o = y * (size * 4 + 1) + 1 + x * 4;
-      raw[o] = 0xc6; raw[o + 1] = 0x28; raw[o + 2] = 0x28; raw[o + 3] = Math.round(a * 255);
+      if (ch === ".") continue;
+      const [r, g, b] = COLORS[ch];
+      raw[o] = r; raw[o + 1] = g; raw[o + 2] = b; raw[o + 3] = 255;
     }
   }
   const chunk = (type, data) => {
